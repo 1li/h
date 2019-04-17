@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="publisher" content="手机电视">
+<title>手机电视</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="手机电视">
+<meta name="description" content="手机电视">
+<link rel="stylesheet" href="http://libs.baidu.com/jquerymobile/1.3.0/jquery.mobile-1.3.0.min.css" />
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="http://libs.baidu.com/jquerymobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
+<style type="text/css">
+.ui-page { 
+background:#EBEBEB;
+}
+</style>
+<style type="text/css">
+.warning {display: none;}
+.warning a{ float: left;}
+.warning #msg { float: left; width: 90%; font-size: 0.9em;}
+.headerNfooter {background-color: #3AA83A;color: #fff;text-shadow: none;}
+.headerNfooter a:link,.headerNfooter a:hover,.headerNfooter a:visited,.headerNfooter a:active { color: #fff; text-decoration: none;}
+.headerNfooter h1 { text-indent: -999em; }
+</style>
+
+<script>
+function getLiveKey(url) {
+    if (url.indexOf("kds1://") > -1 || url.indexOf("kds2://") > -1) {
+        if (url.indexOf("kds1://") > -1) {
+            url = url.replace("kds1://", "http://v.91kds.com/b9/")
+        } else if (url.indexOf("kds2://") > -1) {
+            url = url.replace("kds2://", "http://v.91kds.com/c9/")
+        }
+        url = url.replace("@@", ".m3u8?");
+        $.post('auth3.php?t=' + Math.random(),
+        function(obj) {
+            if (obj != null) {
+                startPlay(url, obj.livekey, obj.token)
+            }
+        },
+        "json")
+    } else if (url.indexOf("letvhtml") > -1) {
+        var chid = url.substring(11);
+        $.getJSON("auth3.php?t=" + Math.random() + "&id=" + chid,
+        function(obj) {
+            if (obj != null) {
+                startPlay(url, obj.livekey, obj.token)
+            }
+        },
+        "json")
+    } else {
+        startPlay(url, "", "")
+    }
+}
+function startPlay(url, k, token) {
+    var media = document.getElementById("ikdsPlayer");
+    if (url.indexOf(".91kds.com") > -1) {
+        media.src = url + "&" + k
+    } else if (url.indexOf("letvhtml") > -1) {
+        var chid = url.substring(11);
+        jsurl = "http://live.gslb.letv.com/gslb?stream_id=" + chid + "&tag=live&ext=m3u8&sign=live_photerne&p1=0&p2=00&p3=001&splatid=1004&ostype=andriod&hwtype=un&platid=10&playid=1&termid=2&pay=0&expect=3&format=1&" + token + "&jsonp=?";
+        $.getJSON(jsurl, null,
+        function(cc) {
+            media.src = cc.location
+        })
+    } else {
+        media.src = url
+    }
+    media.play()
+}
+function getLiveBack(id, st, et) {
+    var xmlhttp;
+    if (window.XMLHttpRequest) {
+        xmlhttp = new XMLHttpRequest()
+    } else {
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP")
+    }
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            document.getElementById("myLiveBack").innerHTML = xmlhttp.responseText
+        }
+    }
+    xmlhttp.open("GET", "get_liveback.php?id=" + id + "&st=" + st + "&et=" + et, true);
+    xmlhttp.send()
+}
+function getEpg(id, day, ishk) {
+    var xmlhttp;
+    if (window.XMLHttpRequest) {
+        xmlhttp = new XMLHttpRequest()
+    } else {
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP")
+    }
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            document.getElementById("myEpg").innerHTML = xmlhttp.responseText
+        }
+    }
+    xmlhttp.open("GET", "get_epg.php?id=" + id + "&day=" + day + "&ishk=" + ishk, true);
+    xmlhttp.send()
+}
+</script>
+</head>
+<body>
+<div class="headerNfooter" data-role="header" data-theme="f" data-position="fixed"   >
+<h1>手机电视-上千个电视频道！高清！免费看！</h1>	
+<a href="javascript:history.back()" data-iconpos="left" data-icon="back">返回</a>	
+<a href="https://1li.github.io/h/h.html" data-icon="home" data-role="button"  data-inline="true">首页</a>
+</div>
+<a target="_blank" href="http://t.cn/EicGKFb">
+<img src="https://i.zcimg.com/static/up/ur/9q3ca.png" width="100%"/></a>
+
+	
+<div data-role="content"  >
+<ul data-role="listview" data-inset="true" data-divider-theme="a"  >
+<li data-role="list-divider"    >
+<div id="myLiveBack">
+	
+<div align="center">
+<h4><a href="https://1li.github.io/a/help.html"   style='text-decoration:none; color:#00ff00;' >
+101【男】风格【饱满激情、感染力强】擅长【促销、广告】</a></h4>	
+
+
+<video autoplay="autoplay"   id="ikdsPlayer" width="100%" height="50" muted src="http://t.cn/EJrSGbm"  controls="controls"  autoplay loop ></video></br>
+<select onchange="getLiveKey(this.options[this.selectedIndex].value)" id="plauURL"  >
+<option value="http://t.cn/EJrSGbm">【样音列表】</option>
+<option value="http://t.cn/EJraE9A">【好声音】简介</option>
+
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+
+
+		
+		
+		<optgroup label="101【男】风格【饱满激情、感染力强】擅长【促销、广告】">
+		<optgroup label="促销类">		
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>
+		<optgroup label="促销类">
+<option value="http://t.cn/Eih1yKD">肯德基促销广告</option>
+<option value="http://t.cn/Eih3XLE">美时达三轮车顺口溜促销</option>
+<option value="http://t.cn/EihutTp">纤秀美美容美体感恩回馈</option>
+<option value="http://t.cn/EihmzV2">袜子10元4双促销甩卖</option>
+<option value="http://t.cn/EJrQfOA">川味香火锅城节日活动促销</option>
+<option value="http://t.cn/EJrYdZc">宇周商场双十二感恩回馈</option>
+<option value="http://t.cn/EJrjrRg">快天下包子店开业促销</option>
+<option value="http://t.cn/EJrONke">乐享旅店广告</option>
+<option value="http://t.cn/EJrKRia">欢喜购年货一条街促销活动</option>
+		</optgroup>
+		
+		<optgroup label="宣传类">
+<option value="http://t.cn/EiyNsdB">脑白金广告</option>
+<option value="http://t.cn/EiypKXU">机遇与辉煌</option>
+		</optgroup>		
+
+<br></select>  
+
+
+<div align="center" data-role="footer" data-position="fixed" >	
+<li  data-role="list-divider"  style="text-align:center; color:#00ff00" >☝ 点击【样音列表】选择样音试听 ☝</li>
+</div>
+
+<div class="headerNfooter" data-role="footer" data-theme="f" data-position="fixed" align="center"  >
+<a href="http://t.cn/EicGKFb"   data-icon="grid"  data-role="button">好声音</a>	
+<a href="https://x.zq9s.cn/0871km/g/ljz3gvbx5w/"  data-icon="star"  data-role="button">节日促销录音，宣传广告配音</a>	
+</div>
+</div>	
+
+<div align="center"  >	
+<a target="_blank" href="http://x.zquan.org/0871km/">
+<img src="https://i.zcimg.com/static/up/df/96t8f.png" width="100%"/></a>
+<h4><a href="http://x.zq9s.cn/0871km/"   style='text-decoration:none; color:#00FF00;' >节日促销录音</a></h4>	
+<h4><a href="http://x.zquan.org/0871km/"   style='text-decoration:none; color:#00FF00;' >宣传广告配音</a></h4>	
+<h4><a href="https://x.zq9s.cn/0871km/g/ljz3gvbx5w/"   style='text-decoration:none; color:#E62129;' >男声女声童声任选</a></h4>	
+</div>
+</div>	
+</body>
+</html>
